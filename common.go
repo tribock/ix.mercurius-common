@@ -18,7 +18,7 @@ func appendToDoku(envParam string) {
 func fileContainsText(textToAppend string, file *os.File) bool {
 	scanner := bufio.NewScanner(file)
 	b, err := ioutil.ReadAll(file)
-	FailOnError(err)
+	FailOnError(err, "not able to read File")
 	fmt.Print(b)
 	log.Println(file)
 	scanner.Split(bufio.ScanLines)

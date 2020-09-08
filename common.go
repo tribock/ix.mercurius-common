@@ -2,7 +2,6 @@ package common
 
 import (
 	"bufio"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -15,33 +14,21 @@ func appendToDoku(envParam string) {
 		panic(err)
 	}
 }
-func fileContainsText(textToAppend string, file *os.File) bool {
-	scanner := bufio.NewScanner(file)
-	b, err := ioutil.ReadAll(file)
+func fileContainsText(textToAppend string, path string) bool {
+	file, err := ioutil.ReadFile(path)
 	FailOnError(err, "not able to read File")
-	fmt.Print(b)
-	log.Println(file)
-	scanner.Split(bufio.ScanLines)
-	for scanner.Scan() {
-		log.Println("HODOOOOOR")
-		log.Println(scanner.Text(), textToAppend)
-		if strings.Contains(scanner.Text(), textToAppend) {
-			return true
-		}
-	}
-	return false
+	return strings.Contains(string(file), textToAppend)
 }
 func writeLines(textToAppend string, path string) error {
+	if fileContainsText(textToAppend, path) {
+		return nil
+	}
 	// overwrite file if it exists
 	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	log.Println(textToAppend)
-	if fileContainsText(textToAppend, file) {
-		return err
-	}
 	// new writer w/ default 4096 buffer size
 	w := bufio.NewWriter(file)
 	_, err = w.WriteString(textToAppend + "\n")

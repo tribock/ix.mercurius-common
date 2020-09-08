@@ -5,3 +5,5 @@
 ```bash
 export GO111MODULE=on
 ```
+
+## env example
